@@ -1,0 +1,7 @@
+*.temp
+*.tmp
+*.log
+debug*.*\*html
+test/
+test*
+work/
