@@ -1,0 +1,55 @@
+Nov-16 10:19:33.513 [main] DEBUG nextflow.cli.Launcher - $> nextflow run ./sRNAtools.nf --help
+Nov-16 10:19:33.648 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.6
+Nov-16 10:19:33.678 [main] INFO  nextflow.cli.CmdRun - Launching `./sRNAtools.nf` [silly_spence] - revision: 7d0f8d63c3
+Nov-16 10:19:33.698 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /research/rgs01/home/clusterHome/hjin/projects/sRNAtools/nextflow.config
+Nov-16 10:19:33.698 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /research/rgs01/home/clusterHome/hjin/projects/sRNAtools/nextflow.config
+Nov-16 10:19:33.755 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Nov-16 10:19:35.176 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/hjin/.nextflow/plugins
+Nov-16 10:19:35.182 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Nov-16 10:19:35.191 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Nov-16 10:19:35.192 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Nov-16 10:19:35.194 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Nov-16 10:19:35.228 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Nov-16 10:19:35.402 [main] DEBUG nextflow.Session - Session uuid: 636ecb7d-0106-4153-8844-56392f03a891
+Nov-16 10:19:35.402 [main] DEBUG nextflow.Session - Run name: silly_spence
+Nov-16 10:19:35.403 [main] DEBUG nextflow.Session - Executor pool size: 2
+Nov-16 10:19:35.573 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.6 build 5660
+  Created: 21-12-2021 16:55 UTC (10:55 CDT)
+  System: Linux 4.18.0-477.58.1.el8_8.x86_64
+  Runtime: Groovy 3.0.9 on Java HotSpot(TM) 64-Bit Server VM 17.0.1+12-LTS-39
+  Encoding: UTF-8 (UTF-8)
+  Process: 1945543@noderome106 [10.220.17.6]
+  CPUs: 1 - Mem: 1003.4 GB (978.4 GB) - Swap: 16 GB (16 GB)
+Nov-16 10:19:35.698 [main] DEBUG nextflow.Session - Work-dir: /research/rgs01/home/clusterHome/hjin/projects/sRNAtools/work [gpfs]
+Nov-16 10:19:35.699 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /research/rgs01/home/clusterHome/hjin/projects/sRNAtools/bin
+Nov-16 10:19:35.717 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Nov-16 10:19:35.738 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Nov-16 10:19:35.765 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 2; maxThreads: 1000
+Nov-16 10:19:35.922 [main] DEBUG nextflow.Session - Session start invoked
+Nov-16 10:19:37.321 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Nov-16 10:19:37.351 [main] INFO  nextflow.Nextflow - 
+        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 11/15/2024]
+       Usage:
+        A typical command for running the pipeline is as follows:
+        nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --outdir run1 --prefix hendegrpq 
+        nextflow run sRNAtools.nf -profile local --fqlist fq2.lst --Trim_Mode 2 --outdir run2 --prefix sapkogrp 
+
+        Configurable arguments:
+        --outdir                      The directory for the pipeline output
+        --prefix                      output prefix for your analysis 
+        --A			      adapter sequence for read 1 if Trim_Mode is 3  
+        --fqlist                      Fastq file list that you want to call sRNAtools
+		 format1 (2 columns) for single_end_oneLane:  
+			  SampleName L001_R1_001.fastq.gz
+		 format2 (2 columns) for single_end_multiLanes: 
+			  SampleName L001_R1_001.fastq.gz,L002_R1_001.fastq.gz
+	--species	             hsa or mmu (use hsa for human; mmu for mouse)
+	--Trim_Mode	             Select a Small RNA-seq protocol
+                1 NextFlex Small RNA-Seq Kit v3 (Hartwell Center protocl)
+                2 NEBNext + sapkogrp/TrueSeq Index 26
+		3 custom ; need to set adapter sequence by -A
+        --help | h                    Show this usage statement.
+       Note:
+         All the above arguments can be configured by the command line interface or in the nextflow.config (default)  
+        

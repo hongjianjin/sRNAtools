@@ -1,4 +1,5 @@
 #!/usr/bin/env nextflow
+nextflow.enable.dsl=2
 /***********************************************************************************
  This is a Container of Nextflow pipeline-sRNAtools
  Input: Fastq filelist   
@@ -6,17 +7,17 @@
  Written by: Hongjian Jin, Ph.D.
  The Center for Applied Bioinformatics,St. Jude Children's Research Hosptial
  Date: 04/11/2023
- Last update: 04/18/2023
+ Last update: 11/15/2024
 ***********************************************************************************/
 def DispConfig() {
 log.info """
-Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.2.0, 4/20/2023]
+Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 11/15/2024]
 Your configuration are the following:
-  fqlist                : ${params.fastq_filelist}
+  fqlist                : ${params.fqlist}
   outdir                : ${params.outdir}
   prefix                : ${params.prefix}
-  Trim_Mode	        : ${params.Trim_Mode}
-  Select_Species        : ${params.Select_Species}
+  Trim_Mode	            : ${params.Trim_Mode}
+  species               : ${params.species}
   A                     : ${params.A}
   The following detail information is based your configuration: 
  
@@ -26,7 +27,7 @@ Your configuration are the following:
 
 def helpMessage() {
   log.info """
-        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.2.0, 4/20/2023]
+        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 11/15/2024]
        Usage:
         A typical command for running the pipeline is as follows:
         nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --outdir run1 --prefix hendegrpq 
@@ -41,8 +42,8 @@ def helpMessage() {
 			  SampleName L001_R1_001.fastq.gz
 		 format2 (2 columns) for single_end_multiLanes: 
 			  SampleName L001_R1_001.fastq.gz,L002_R1_001.fastq.gz
-
-	--Trim_Mode	              Select a Small RNA-seq protocol
+	--species	             hsa or mmu (use hsa for human; mmu for mouse)
+	--Trim_Mode	             Select a Small RNA-seq protocol
                 1 NextFlex Small RNA-Seq Kit v3 (Hartwell Center protocl)
                 2 NEBNext + sapkogrp/TrueSeq Index 26
 		3 custom ; need to set adapter sequence by -A
@@ -84,6 +85,29 @@ if ( params.Trim_Mode == 1){ // NEXTflex
 
 // Display the configuration
 DispConfig() 
+
+
+
+/*This process is responsible for zcat the multiple lanes' fastq.gz into one mergred fastq.gz  */
+process Cat_SingleEndFastqGz_MultiLanes {
+   publishDir "${params.outdir}/Fastq/${SampleName}", mode: 'symlink', overwrite: true
+   input:
+   tuple val(SampleName), path(Read1_Fastq)
+   
+   output:
+   tuple val(SampleName), path("${SampleName}_R1.fastq.gz")
+
+   script:
+   """
+     if [[ "$Read1_Fastq" == *","* ]]; then
+	 echo "Info: cat multiple lanes."
+	 cat `echo $Read1_Fastq | tr ',' ' '` >${SampleName}_R1.fastq.gz
+     else
+         ln -s $Read1_Fastq ${SampleName}_R1.fastq.gz
+     fi
+   """  
+}
+
 
 /**********************************************************************************************
 * This Process is responsible for trimming reads by Trim_Galore/0.6.6
@@ -137,28 +161,6 @@ process Trim_Galore_Custom {
    """
 }
 
-
-/*This process is responsible for zcat the multiple lanes' fastq.gz into one mergred fastq.gz  */
-process Cat_SingleEndFastqGz_MultiLanes {
-   publishDir "${params.outdir}/Fastq/${SampleName}", mode: 'symlink', overwrite: true
-   input:
-   tuple val(SampleName), path(Read1_Fastq)
-   
-   output:
-   tuple val(SampleName), path("${SampleName}_R1.fastq.gz")
-
-   script:
-   """
-     if [[ "$Read1_Fastq" == *","* ]]; then
-	 echo "Info: cat multiple lanes."
-	 cat `echo $Read1_Fastq | tr ',' ' '` >${SampleName}_R1.fastq.gz
-     else
-         ln -s $Read1_Fastq ${SampleName}_R1.fastq.gz
-     fi
-   """  
-}
-
-
 /***********************************************************************************************
 *  This process is responsible for adapting the trim_galore output to fq2collapedFa.pl
 ************************************************************************************************/
@@ -185,11 +187,13 @@ process Run_Animal {
    tuple val(SampleName), path(clean_fa) 
    output:
    tuple val(SampleName), path("${SampleName}_table.result.txt") 
+
+
    script:
    """
    perl /research/groups/cab/projects/automapper/common/hjin/bin/sRNAtools/run_animal.pl \
-          -infile ${SampleName}_clean.fa \
-	  -species ${params.Select_Species} \
+     -infile ${clean_fa} \
+	  -species ${params.species} \
 	  -outdir . \
 	  -jobid ${SampleName}
    """
@@ -224,7 +228,7 @@ process Join_Tables {
    """
      Rscript  /research/groups/cab/projects/automapper/common/hjin/bin/sRNAtools/program/sRNAtools_merge_matrix.R \
      -L ${sRNA_result_list.collect{ "$it" }.join(",")} \
-     -s ${params.Select_Species} \
+     -s ${params.species} \
      -O ${params.prefix}
    """
 }
@@ -254,4 +258,7 @@ workflow {
   3. use workflow and replace set with tuple
   4. update sRNAtools_merge_matrix.R to handle empty file ,single input absence of miRNA etc.
   5. implement Cat_SingleEndFastqGz_MultiLanes
+
+11/15/2024  
 /*****************************************************************************************************/
+
