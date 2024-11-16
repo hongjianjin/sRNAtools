@@ -6,17 +6,9 @@ https://wiki.stjude.org/display/CABI/CAB+miRNAseq+nextflow+pipeline
 ## Dependencies 
 * databases: /research/groups/cab/projects/automapper/common/tchang1/Softwares/sRNAtools/db/  (defined by DBCONFIG.txt) 
 * bowtie-1.2.2 index: /research/groups/cab/projects/automapper/common/hjin/bin/bowtie-1.2.2/indexes
-* nextflow/21.10.5
-* modules: R/4.3.2,perl/5.20.1, samtools/1.9 , bedtools/2.25.0, bowtie/1.2.2, trimgalore/0.6.6,fastqc/0.11.8, python37, 
+* modules: nextflow/21.10.5, R/4.3.2,perl/5.20.1, samtools/1.9 , bedtools/2.25.0, bowtie/1.2.2, trimgalore/0.6.6,fastqc/0.11.8, python37 
 
-## Input
-
-* format1 (2 columns) for single_end_oneLane: 
-  SampleName R1.fastq.gz 
-* format2 (2 columns) for single_end_multiLanes: 
-  SampleName L1_R1.fastq.gz,L2_R1.fastq.gz 
-
-## Run - example1
+## Usage
 ```bash
 export LD_LIBRARY_PATH="/hpcf/authorized_apps/rhel8_apps/gcc/13.1.0/install/lib64:$LD_LIBRARY_PATH"
 module nextflow/21.10.5
@@ -50,16 +42,42 @@ Launching `./sRNAtools.nf` [silly_spence] - revision: 7d0f8d63c3
         --help | h                    Show this usage statement.
        Note:
          All the above arguments can be configured by the command line interface or in the nextflow.config (default)
+```
+## Input
+A sampleName + fastq list file is needed. \
+The first column is the SampleName and the second column is the  fastq.gz filename of that sample. \
+* format1 (2 columns) for single_end_oneLane: 
+  SampleName R1.fastq.gz 
+If there are multiple lanes (fastq.gz files) per sample,  concatenate multiple fastq.gz filenames by comma in the second column like: \
+* format2 (2 columns) for single_end_multiLanes: 
+  SampleName L1_R1.fastq.gz,L2_R1.fastq.gz 
+
+| Sample1 | Sample1_L001_R1_001.fastq.gz,Sample1_L002_R1_001.fastq.gz|
+| Sample2 | Sample2_L001_R1_001.fastq.gz,Sample2_L002_R1_001.fastq.gz,Sample2_L003_R1_001.fastq.gz|
+
+## Output
+
+* table.result.txt # raw counts table of all small RNA species (one file for each sample)
+* all.count.txt /all.RPM.txt # merged raw counts /RPM table of all small RNA species (including all samples)
+* miRNA.count.txt / miRNA.RPM.txt  # merged raw counts /RPM table of miRNA (including all samples)
 
 
+## A toy example
+
+### input 
+```bash
 cat fq1.lst 
 R022_3P /research/groups/sapkogrp/projects/CAB/common/UMD_sRNA_seq/R022_3P_L001_R1_001.fastq.gz
 R044_3P /research/groups/sapkogrp/projects/CAB/common/UMD_sRNA_seq/R044_3P_L002_R1_001.fastq.gz
-
-nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --species hsa --outdir sapkogrp --prefix sapkogrp 
 ```
 
-## Output - example1
+### run nextflow
+```bash
+cmd="nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --species hsa --outdir sapkogrp --prefix sapkogrp"
+
+```
+
+### output
 
 ```bash
 └── sapkogrp
