@@ -51,10 +51,11 @@ The first column is the SampleName and the second column is the  fastq.gz filena
 If there are multiple lanes (fastq.gz files) per sample,  concatenate multiple fastq.gz filenames by comma in the second column like: \
 * format2 (2 columns) for single_end_multiLanes: 
   SampleName L1_R1.fastq.gz,L2_R1.fastq.gz \
+
 |   |   |
 |---|---|
-| Sample1 | Sample1_L001_R1_001.fastq.gz,Sample1_L002_R1_001.fastq.gz|
-| Sample2 | Sample2_L001_R1_001.fastq.gz,Sample2_L002_R1_001.fastq.gz,Sample2_L003_R1_001.fastq.gz|
+| Sample1 | Sample1_L001_R1_001.fastq.gz,Sample1_L002_R1_001.fastq.gz |
+| Sample2 | Sample2_L001_R1_001.fastq.gz,Sample2_L002_R1_001.fastq.gz,Sample2_L003_R1_001.fastq.gz |
 
 ## Output
 
