@@ -44,7 +44,7 @@ Launching `./sRNAtools.nf` [silly_spence] - revision: 7d0f8d63c3
          All the above arguments can be configured by the command line interface or in the nextflow.config (default)
 ```
 ## Input
-A tab-delimited sample list text file is needed. There are two acceptable formats as follows. \
+A tab-delimited sample list text file is needed. There are two acceptable formats as follows. 
 * Format1 (2 columns) for single_end_oneLane.The first column is the SampleName and the second column is the  fastq.gz filename of that sample. 
 
 |   |   |
