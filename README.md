@@ -47,6 +47,7 @@ Launching `./sRNAtools.nf` [silly_spence] - revision: 7d0f8d63c3
 A sampleName + fastq list file is needed. \
 The first column is the SampleName and the second column is the  fastq.gz filename of that sample. 
 * format1 (2 columns) for single_end_oneLane: 
+
 |   |   |
 |---|---|
 | Sample1 | Sample1_L001_R1_001.fastq.gz |
