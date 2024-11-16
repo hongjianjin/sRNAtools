@@ -44,9 +44,8 @@ Launching `./sRNAtools.nf` [silly_spence] - revision: 7d0f8d63c3
          All the above arguments can be configured by the command line interface or in the nextflow.config (default)
 ```
 ## Input
-A sampleName + fastq list file is needed. \
-The first column is the SampleName and the second column is the  fastq.gz filename of that sample. 
-* format1 (2 columns) for single_end_oneLane: 
+A tab-delimited sample list text file is needed. There are two acceptable formats as follows. \
+* Format1 (2 columns) for single_end_oneLane.The first column is the SampleName and the second column is the  fastq.gz filename of that sample. 
 
 |   |   |
 |---|---|
@@ -54,8 +53,7 @@ The first column is the SampleName and the second column is the  fastq.gz filena
 | Sample2 | Sample2_L001_R1_001.fastq.gz |
 
 
-If there are multiple lanes (fastq.gz files) per sample,  concatenate multiple fastq.gz filenames by comma in the second column like:
-* format2 (2 columns) for single_end_multiLanes: 
+* Format2 (2 columns) for single_end_multiLanes. If there are multiple lanes (fastq.gz files) per sample,  concatenate multiple fastq.gz filenames by comma in the second column:
 
 |   |   |
 |---|---|
