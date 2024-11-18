@@ -1,4 +1,4 @@
-## CAB small RNA-seq Nextflow pipeline [V1.2.0] based on sRNAtools
+## CAB small RNA-seq Nextflow pipeline [V1.3.0] based on sRNAtools
 
 ## CAB internal wikipage
 https://wiki.stjude.org/display/CABI/CAB+miRNAseq+nextflow+pipeline
