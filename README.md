@@ -10,16 +10,16 @@ https://wiki.stjude.org/display/CABI/CAB+miRNAseq+nextflow+pipeline
 
 ## Usage
 ```bash
-export LD_LIBRARY_PATH="/hpcf/authorized_apps/rhel8_apps/gcc/13.1.0/install/lib64:$LD_LIBRARY_PATH"
+# export LD_LIBRARY_PATH="/hpcf/authorized_apps/rhel8_apps/gcc/13.1.0/install/lib64:$LD_LIBRARY_PATH"
 module nextflow/21.10.5
 nextflow run sRNAtools.nf --help 
 
 
 Picked up _JAVA_OPTIONS: -Djava.io.tmpdir=/research/rgs01/scratch_lsf/java -XX:ParallelGCThreads=1 -XX:ConcGCThreads=1
-N E X T F L O W  ~  version 21.10.6
-Launching `./sRNAtools.nf` [silly_spence] - revision: 7d0f8d63c3
+N E X T F L O W  ~  version 22.04.3
+Launching `/research/groups/cab/projects/automapper/common/hjin/bin/cab_nextflow/sRNAtools/sRNAtools.nf` [naughty_blackwell] DSL2 - revision: cb50824d71
 
-        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 11/15/2024]
+        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 12/15/2024]
        Usage:
         A typical command for running the pipeline is as follows:
         nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --outdir run1 --prefix hendegrpq
@@ -39,9 +39,13 @@ Launching `./sRNAtools.nf` [silly_spence] - revision: 7d0f8d63c3
                 1 NextFlex Small RNA-Seq Kit v3 (Hartwell Center protocl)
                 2 NEBNext + sapkogrp/TrueSeq Index 26
                 3 custom ; need to set adapter sequence by -A
+        --sRNAtools_path        if you use your own sRNAtools installation
+        --conda_env_path  if you create your own sRNAtools conda_env
         --help | h                    Show this usage statement.
+
        Note:
          All the above arguments can be configured by the command line interface or in the nextflow.config (default)
+
 ```
 ## Input
 A tab-delimited sample list text file is needed. There are two acceptable formats as follows. 
@@ -78,7 +82,7 @@ R044_3P /research/groups/sapkogrp/projects/CAB/common/UMD_sRNA_seq/R044_3P_L002_
 
 ### run nextflow
 ```bash
-cmd="nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --species hsa --outdir sapkogrp --prefix sapkogrp"
+cmd="nextflow run sRNAtools.nf -c nextflow_conda.config -profile cluster --fqlist fq1.lst --Trim_Mode 1 --species hsa --outdir sapkogrp --prefix sapkogrp"
 
 ```
 
@@ -122,4 +126,4 @@ http://rnainformatics.org.cn/sRNAtools/download.php
 * 2023-04-18,  Version 1.0.0.  implement NEXTflex small RNAseq protocol
 * 2023-04-20, Version 1.2.0. implement NEBNext small RNAseq protocol
 * 2024-11-16, Version 1.3.0. check compatibility with rhel8; minor changes 
-
+* 2024-12-15, finished internal test. 

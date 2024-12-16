@@ -19,15 +19,16 @@ Your configuration are the following:
   Trim_Mode	            : ${params.Trim_Mode}
   species               : ${params.species}
   A                     : ${params.A}
+  sRNAtools_path        : ${params.sRNAtools_path}
+  conda_env_path        : ${params.conda_env_path}
   The following detail information is based your configuration: 
- 
 """  
 //  exit 0    
 }
 
 def helpMessage() {
   log.info """
-        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 11/15/2024]
+        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 12/15/2024]
        Usage:
         A typical command for running the pipeline is as follows:
         nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --outdir run1 --prefix hendegrpq 
@@ -42,15 +43,18 @@ def helpMessage() {
 			  SampleName L001_R1_001.fastq.gz
 		 format2 (2 columns) for single_end_multiLanes: 
 			  SampleName L001_R1_001.fastq.gz,L002_R1_001.fastq.gz
-	--species	             hsa or mmu (use hsa for human; mmu for mouse)
-	--Trim_Mode	             Select a Small RNA-seq protocol
+        --species	             hsa or mmu (use hsa for human; mmu for mouse)
+        --Trim_Mode	             Select a Small RNA-seq protocol
                 1 NextFlex Small RNA-Seq Kit v3 (Hartwell Center protocl)
                 2 NEBNext + sapkogrp/TrueSeq Index 26
 		3 custom ; need to set adapter sequence by -A
+        --sRNAtools_path	if you use your own sRNAtools installation   
+        --conda_env_path  if you create your own sRNAtools conda_env       
         --help | h                    Show this usage statement.
+
        Note:
          All the above arguments can be configured by the command line interface or in the nextflow.config (default)  
-        """
+"""
 }
 
 
@@ -174,7 +178,7 @@ process Collapse_FqToFa {
 
    script:
    """
-   perl /research/groups/cab/projects/automapper/common/hjin/bin/sRNAtools/fq2collapedFa.pl -i ${SampleName}_trimmed.fq -o ${SampleName}_clean.fa
+   perl ${params.sRNAtools_path}/fq2collapedFa.pl -i ${SampleName}_trimmed.fq -o ${SampleName}_clean.fa
    """
 }
 /***********************************************************************************************
@@ -191,7 +195,7 @@ process Run_Animal {
 
    script:
    """
-   perl /research/groups/cab/projects/automapper/common/hjin/bin/sRNAtools/run_animal.pl \
+   perl ${params.sRNAtools_path}/run_animal.pl \
      -infile ${clean_fa} \
 	  -species ${params.species} \
 	  -outdir . \
@@ -226,7 +230,7 @@ process Join_Tables {
 
    script:
    """
-     Rscript  /research/groups/cab/projects/automapper/common/hjin/bin/sRNAtools/program/sRNAtools_merge_matrix.R \
+     Rscript  ${params.sRNAtools_path}/sRNAtools_merge_matrix.R \
      -L ${sRNA_result_list.collect{ "$it" }.join(",")} \
      -s ${params.species} \
      -O ${params.prefix}
