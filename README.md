@@ -1,4 +1,4 @@
-## CAB small RNA-seq Nextflow pipeline [V1.3.0] based on sRNAtools
+## CAB small RNA-seq Nextflow pipeline [V1.4.0] based on sRNAtools
 
 ## CAB internal wikipage
 https://wiki.stjude.org/display/CABI/CAB+miRNAseq+nextflow+pipeline
@@ -19,7 +19,7 @@ Picked up _JAVA_OPTIONS: -Djava.io.tmpdir=/research/rgs01/scratch_lsf/java -XX:P
 N E X T F L O W  ~  version 22.04.3
 Launching `/research/groups/cab/projects/automapper/common/hjin/bin/cab_nextflow/sRNAtools/sRNAtools.nf` [naughty_blackwell] DSL2 - revision: cb50824d71
 
-        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 12/15/2024]
+        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.4.0, 10/06/2026]
        Usage:
         A typical command for running the pipeline is as follows:
         nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --outdir run1 --prefix hendegrpq
@@ -39,6 +39,7 @@ Launching `/research/groups/cab/projects/automapper/common/hjin/bin/cab_nextflow
                 1 NextFlex Small RNA-Seq Kit v3 (Hartwell Center protocl)
                 2 NEBNext + sapkogrp/TrueSeq Index 26
                 3 custom ; need to set adapter sequence by -A
+                4 NEXTFLEX Small RNA-Seq Kit v4 with UDIs (Revvity)
         --sRNAtools_path        if you use your own sRNAtools installation
         --conda_env_path  if you create your own sRNAtools conda_env
         --help | h                    Show this usage statement.
@@ -113,6 +114,32 @@ cmd="nextflow run sRNAtools.nf -c nextflow_conda.config -profile cluster --fqlis
             └── R022-3P_trimmed.fq
 ```
 
+## A multiple-lane example
+
+Use format2: comma-separate the fastq.gz paths for all lanes of a sample in the second column (no spaces around the commas). The pipeline concatenates them into one `fastq.gz` before trimming.
+
+### input
+
+```bash
+cat fq2.lst
+3489919_DMSO1_S524	/research/groups/hangrp/projects/hangrp_cab/common/hangrp_881905_Small_RNA-1/FASTQ_files/3489919/3489919_DMSO1_S524_L004_R1_001.fastq.gz,/research/groups/hangrp/projects/hangrp_cab/common/hangrp_881905_Small_RNA-1/FASTQ_files/3489919/3489919_DMSO1_S524_L005_R1_001.fastq.gz,/research/groups/hangrp/projects/hangrp_cab/common/hangrp_881905_Small_RNA-1/FASTQ_files/3489919/3489919_DMSO1_S524_L006_R1_001.fastq.gz,/research/groups/hangrp/projects/hangrp_cab/common/hangrp_881905_Small_RNA-1/FASTQ_files/3489919/3489919_DMSO1_S524_L007_R1_001.fastq.gz
+```
+
+### run nextflow
+
+```bash
+cmd="nextflow run sRNAtools.nf -c nextflow_conda.config -profile cluster --fqlist fq2.lst --Trim_Mode 1 --species hsa --outdir hangrp --prefix hangrp"
+```
+
+### output
+
+```bash
+└── hangrp
+    └── Fastq
+        └── 3489919_DMSO1_S524
+            └── 3489919_DMSO1_S524_R1.fastq.gz   # L004+L005+L006+L007 concatenated
+```
+
 ## sRNAtools
 https://academic.oup.com/bib/article/22/1/463/5686255
 http://rnainformatics.org.cn/sRNAtools/download.php
@@ -126,4 +153,5 @@ http://rnainformatics.org.cn/sRNAtools/download.php
 * 2023-04-18,  Version 1.0.0.  implement NEXTflex small RNAseq protocol
 * 2023-04-20, Version 1.2.0. implement NEBNext small RNAseq protocol
 * 2024-11-16, Version 1.3.0. check compatibility with rhel8; minor changes 
-* 2024-12-15, finished internal test. 
+* 2024-12-15, finished internal test.
+* 2026-10-06, Version 1.4.0. add `--Trim_Mode 4` for the NEXTFLEX Small RNA-Seq Kit v4 with UDIs (Revvity); see `kits_info.md`. Existing `--Trim_Mode 2` (NEBNext) and `3` (custom) are unchanged. 

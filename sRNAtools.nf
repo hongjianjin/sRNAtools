@@ -11,7 +11,7 @@ nextflow.enable.dsl=2
 ***********************************************************************************/
 def DispConfig() {
 log.info """
-Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 11/15/2024]
+Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.4.0, 10/06/2026]
 Your configuration are the following:
   fqlist                : ${params.fqlist}
   outdir                : ${params.outdir}
@@ -28,7 +28,7 @@ Your configuration are the following:
 
 def helpMessage() {
   log.info """
-        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.3.0, 12/15/2024]
+        Welocme to run Nextflow Pipeline sRNAtools.nf [version 1.4.0, 10/06/2026]
        Usage:
         A typical command for running the pipeline is as follows:
         nextflow run sRNAtools.nf -profile local --fqlist fq1.lst --Trim_Mode 1 --outdir run1 --prefix hendegrpq 
@@ -48,6 +48,7 @@ def helpMessage() {
                 1 NextFlex Small RNA-Seq Kit v3 (Hartwell Center protocl)
                 2 NEBNext + sapkogrp/TrueSeq Index 26
 		3 custom ; need to set adapter sequence by -A
+		4 NEXTFLEX Small RNA-Seq Kit v4 with UDIs (Revvity)
         --sRNAtools_path	if you use your own sRNAtools installation   
         --conda_env_path  if you create your own sRNAtools conda_env       
         --help | h                    Show this usage statement.
@@ -82,6 +83,11 @@ if ( params.Trim_Mode == 1){ // NEXTflex
     //A =" AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC -a TGGAATTCTCGGGTGCCAAGG -a GGAAGAGCACACGTCTGAACTCCAGTCACCAACTAATCTCGTATGCCGTC -n 3"
     A = params.A
     println ("custom adapter: $params.A  ")
+}else if ( params.Trim_Mode == 4){ // NEXTFLEX Small RNA-Seq Kit v4 with UDIs (Revvity)
+    // Same 3' adapter as v3, but v4 does not flank the insert with 4 random/UMI bases
+    // (see kits_info.md), so it is routed through Trim_Galore_Custom (adapter-only
+    // clipping, no --clip_R1/--three_prime_clip_R1) rather than Trim_Galore_NEXTflex.
+    A="TGGAATTCTCGGGTGCCAAGG"
 }else{
     helpMessage()
     exit 0
@@ -107,7 +113,8 @@ process Cat_SingleEndFastqGz_MultiLanes {
 	 echo "Info: cat multiple lanes."
 	 cat `echo $Read1_Fastq | tr ',' ' '` >${SampleName}_R1.fastq.gz
      else
-         ln -s $Read1_Fastq ${SampleName}_R1.fastq.gz
+         # cat (not ln -s): a symlink here can go missing after scratch copy-back on the cluster profile
+         cat $Read1_Fastq >${SampleName}_R1.fastq.gz
      fi
    """  
 }
@@ -264,5 +271,10 @@ workflow {
   5. implement Cat_SingleEndFastqGz_MultiLanes
 
 11/15/2024  
+
+10/06/2026 Version 1.4.0
+  1. implement Trim_Mode 4: NEXTFLEX Small RNA-Seq Kit v4 with UDIs (Revvity) — same 3' adapter
+     as v3 but no flanking 4-nt random/UMI bases to trim (see kits_info.md); routed through
+     the existing Trim_Galore_Custom process. Trim_Mode 2 (NEBNext) and 3 (custom) are unchanged.
 /*****************************************************************************************************/
 
